@@ -5,37 +5,58 @@ const app = express()
 app.use(express.urlencoded({
     extended: true
 }))
+app.use(express.static("public"))
 
 app.set("view engine", "ejs")
 
-var newGoals = ["Learn Programming", "Kybalion", "Keep the Sigma State", "Breathe", "Eat Well"]
+let newGoals = ["Learn Programming", "magickkk", "HIGH VALUE MAN", "Breathe", "Eat Well"]
+let workGoals = []
 
 
 app.get("/", (req, res) => {
 
-    var today = new Date()
+    let today = new Date()
 
-    var options = {
+    let options = {
         day: "numeric",
         weekday: "long",
         month: "long"
     }
 
-    var day = today.toLocaleDateString("en-US", options)
+    let day = today.toLocaleDateString("en-US", options)
 
     res.render("list", {
-        kindOfDay: day,
+        listTitle: day,
         newListGoals: newGoals
     })
 })
 ///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
 app.post("/", (req, res) => {
-    var newGoal = req.body.newGoal
-    newGoals.push(newGoal)
-    console.log(newGoal)
-    ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
-    res.redirect("/")
+    let newGoal = req.body.newGoal
+    console.log(req.body)
+    if (req.body.list === "Work") {
+        workGoals.push(newGoal)
+        res.redirect("/work")
+    } else {
+        newGoals.push(newGoal)
+        res.redirect("/")
+    }
+    // ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
+    // res.redirect("/")
 })
+
+app.get("/work", (req, res) => {
+    res.render("list", {
+        listTitle: "Work Goals",
+        newListGoals: workGoals
+    })
+})
+
+app.get("/about", (req, res) => {
+    res.render("about")
+}
+)
+
 
 
 
