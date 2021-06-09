@@ -1,6 +1,7 @@
 const express = require("express")
 
 const app = express()
+const date = require(__dirname + "/date.js")
 // app.use(express.json());
 app.use(express.urlencoded({
     extended: true
@@ -15,16 +16,7 @@ let workGoals = []
 
 app.get("/", (req, res) => {
 
-    let today = new Date()
-
-    let options = {
-        day: "numeric",
-        weekday: "long",
-        month: "long"
-    }
-
-    let day = today.toLocaleDateString("en-US", options)
-
+    let day = date.getDate()
     res.render("list", {
         listTitle: day,
         newListGoals: newGoals

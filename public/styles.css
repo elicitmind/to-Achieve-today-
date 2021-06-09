@@ -93,5 +93,14 @@ footer {
   color: white;
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;  
  
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
 }
