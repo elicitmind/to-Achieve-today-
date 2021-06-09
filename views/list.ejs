@@ -9,44 +9,24 @@
 </head>
 
 <body>
-<% if (kindOfDay === 0 || kindOfDay == 6) { %>
-<h1 style="color: cornflowerblue"> <%= kindOfDay %> </h1>
-<% } else { %>
+
+    <% if (kindOfDay === 0 || kindOfDay == 6) { %>
+    <h1 style="color: cornflowerblue"> <%= kindOfDay %> </h1>
+    <% } else { %>
     <h1 style="color:firebrick"> <%= kindOfDay %> </h1>
     <% } %>
 
-    <h1>MASZ MOC</h1>
-    <h2>TWORZYSZ RZECZYWISTOŚĆ</h2>
+    <ul>
+        <% for (i=0; i<newListGoals.length; i++) { %>
+       <li> <%= newListGoals[i] %></li>
+       <% } %>
+    </ul>
+    <form class="" action="/" method="POST">
+        <input type="text" name="newGoal">
+        <button title="add" type="submit">CEL</button>
+    </form>
 
-    <h3>WYGRYWASZ </h3>
-    <h1>NIC NIE JEST PRAWDZIWE</h1>
-    <h1>WSZYSTKO JEST DOZWOLONE</h1>
-    <h3>ZWYYYCIESTWO</h3>
-    <BR><BR>
-    <h1>MASZ MOC</h1>
-    <h2>TWORZYSZ RZECZYWISTOŚĆ</h2>
 
-    <h3>WYGRYWASZ </h3>
-    <h1>NIC NIE JEST PRAWDZIWE</h1>
-    <h1>WSZYSTKO JEST DOZWOLONE</h1>
-    <h3>ZWYYYCIESTWO</h3>
-    <BR><BR>
-    <h1>MASZ MOC</h1>
-    <h2>TWORZYSZ RZECZYWISTOŚĆ</h2>
-
-    <h3>WYGRYWASZ </h3>
-    <h1>NIC NIE JEST PRAWDZIWE</h1>
-    <h1>WSZYSTKO JEST DOZWOLONE</h1>
-    <h3>ZWYYYCIESTWO</h3>
-    <BR><BR>
-    <h1>MASZ MOC</h1>
-    <h2>TWORZYSZ RZECZYWISTOŚĆ</h2>
-
-    <h3>WYGRYWASZ </h3>
-    <h1>NIC NIE JEST PRAWDZIWE</h1>
-    <h1>WSZYSTKO JEST DOZWOLONE</h1>
-    <h3>ZWYYYCIESTWO</h3>
-    <BR><BR>
 
 </body>
 

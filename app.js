@@ -1,57 +1,42 @@
 const express = require("express")
 
 const app = express()
+// app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }))
 
 app.set("view engine", "ejs")
 
-//maandag	Monday
-// dinsdag	Tuesday
-// woensdag	Wednesday
-// donderdag	Thursday
-// vrijdag	Friday
-// zaterdag	Saturday
-// zondag
+var newGoals = ["Learn Programming", "Kybalion", "Keep the Sigma State", "Breathe", "Eat Well"]
+
 
 app.get("/", (req, res) => {
 
-    let today = new Date()
-    let currentDay = today.getDay()
-    let day = ""
+    var today = new Date()
 
-    switch (currentDay) {
-        case 0:
-            day = "ZONDAG"
-            break;
-        case 1:
-            day = "MAANDAG"
-            break;
-        case 2:
-            day = "DINSDAG"
-            break;
-        case 3:
-            day = "WOENSDAG"
-            break;
-        case 4:
-            day = "DONDERDAG"
-            break;
-        case 5:
-            day = "VRIJDAG"
-            break;
-        case 6:
-            day = "ZATERDAG"
-            break;
-        default:
-            alert("SPACE AND TIME. LOG = " + currentDay)
-            break;
+    var options = {
+        day: "numeric",
+        weekday: "long",
+        month: "long"
     }
 
+    var day = today.toLocaleDateString("en-US", options)
+
     res.render("list", {
-        kindOfDay: day
+        kindOfDay: day,
+        newListGoals: newGoals
     })
 })
+///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
+app.post("/", (req, res) => {
+    var newGoal = req.body.newGoal
+    newGoals.push(newGoal)
+    console.log(newGoal)
+    ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
+    res.redirect("/")
+})
+
 
 
 app.listen(3000, () => console.log("server UP on port 3000"))
