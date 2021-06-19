@@ -1,5 +1,5 @@
 const express = require("express")
-
+const mongoose = require("mongoose")
 const app = express()
 const date = require(__dirname + "/date.js")
 // app.use(express.json());
@@ -10,9 +10,13 @@ app.use(express.static("public"))
 
 app.set("view engine", "ejs")
 
-let newGoals = ["Learn Programming", "magickkk", "HIGH VALUE MAN", "Breathe", "Eat Well"]
-let workGoals = []
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true})
 
+const itemsSchema = new mongoose.Schema({
+    name: String
+})
+
+const Item = mongoose.model("Item", itemsSchema)
 
 app.get("/", (req, res) => {
 
