@@ -10,22 +10,57 @@ app.use(express.static("public"))
 
 app.set("view engine", "ejs")
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true})
 
-const itemsSchema = new mongoose.Schema({
+// PODŁĄCZAM MONGOOSE I TWORZE DATABASE TODOLISTDB
+mongoose.connect("mongodb://localhost:27017/todolistDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+
+const goalsSchema = new mongoose.Schema({
     name: String
 })
 
-const Item = mongoose.model("Item", itemsSchema)
+const Goal = mongoose.model("Goal", goalsSchema)
 
-app.get("/", (req, res) => {
-
-    let day = date.getDate()
-    res.render("list", {
-        listTitle: day,
-        newListGoals: newGoals
-    })
+const goal1 = new Goal({
+    name: "MAGICKK"
 })
+
+const goal2 = new Goal({
+    name: "PROGRAMMING, TWEET, GIT"
+})
+
+const goal3 = new Goal({
+    name: "BE FEARLESS"
+})
+
+const defaultGoals = [goal1, goal2, goal3]
+
+
+app.get("/", async (req, res) => {
+    const results = await Goal.find({})
+    // Goal.find((err, results) => {
+    if (results.length === 0) {
+
+        await Goal.insertMany(defaultGoals, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log("success inserting")
+            }
+        })
+        console.log(results)
+        res.redirect("/");
+    } else {
+        let day = date.getDate()
+        res.render("list", {
+            listTitle: day,
+            newListGoals: results
+        })
+    }
+})
+// })
 ///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
 app.post("/", (req, res) => {
     let newGoal = req.body.newGoal
@@ -50,8 +85,7 @@ app.get("/work", (req, res) => {
 
 app.get("/about", (req, res) => {
     res.render("about")
-}
-)
+})
 
 
 
