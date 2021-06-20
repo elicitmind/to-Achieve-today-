@@ -14,7 +14,8 @@ app.set("view engine", "ejs")
 // PODŁĄCZAM MONGOOSE I TWORZE DATABASE TODOLISTDB
 mongoose.connect("mongodb://localhost:27017/todolistDB", {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 })
 
 const goalsSchema = new mongoose.Schema({
@@ -68,10 +69,24 @@ app.post("/", (req, res) => {
     const addGoal = new Goal({
         name: newGoal
     })
-    newGoal.save()
+    addGoal.save()
+
+    res.redirect("/")
   
     // ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
     // res.redirect("/")
+})
+
+app.post("/delete", (req, res) => {
+    const checkedGoalId = req.body.checkbox
+    Goal.findByIdAndRemove(checkedGoalId, (err) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log(checkedGoalId + " removed!")
+        }
+    })
+    res.redirect("/")
 })
 
 app.get("/work", (req, res) => {
