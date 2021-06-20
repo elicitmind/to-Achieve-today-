@@ -63,15 +63,13 @@ app.get("/", (req, res) => {
 })
 ///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
 app.post("/", (req, res) => {
-    let newGoal = req.body.newGoal
+    const newGoal = req.body.newGoal
     console.log(req.body)
-    if (req.body.list === "Work") {
-        workGoals.push(newGoal)
-        res.redirect("/work")
-    } else {
-        newGoals.push(newGoal)
-        res.redirect("/")
-    }
+    const addGoal = new Goal({
+        name: newGoal
+    })
+    newGoal.save()
+  
     // ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
     // res.redirect("/")
 })
