@@ -38,6 +38,13 @@ const goal3 = new Goal({
 
 const defaultGoals = [goal1, goal2, goal3]
 
+const listSchema = {
+    name: String,
+    goals: [goalsSchema]
+}
+
+const List = mongoose.model("List", listSchema)
+
 
 app.get("/", (req, res) => {
     Goal.find({}, (err, results) => {
@@ -89,11 +96,21 @@ app.post("/delete", (req, res) => {
     res.redirect("/")
 })
 
-app.get("/work", (req, res) => {
-    res.render("list", {
-        listTitle: "Work Goals",
-        newListGoals: workGoals
+app.get("/:customPage", (req, res) => {
+    const customPage = req.params.customPage
+    List.findOne({name: customPage}, (err, results) => {
+        if (!results) {
+            const list = new List({
+        name: customPage,
+        goals: defaultGoals
     })
+    list.save()
+    res.redirect("/" + customPage)
+        } else {
+            res.render("list", {listTitle: results.name, newListGoals: results.goals})
+        }
+    })
+      
 })
 
 app.get("/about", (req, res) => {
