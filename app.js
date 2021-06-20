@@ -38,29 +38,29 @@ const goal3 = new Goal({
 const defaultGoals = [goal1, goal2, goal3]
 
 
-app.get("/", async (req, res) => {
-    const results = await Goal.find({})
-    // Goal.find((err, results) => {
-    if (results.length === 0) {
-
-        await Goal.insertMany(defaultGoals, (err) => {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log("success inserting")
-            }
-        })
-        console.log(results)
-        res.redirect("/");
-    } else {
-        let day = date.getDate()
-        res.render("list", {
-            listTitle: day,
-            newListGoals: results
-        })
-    }
+app.get("/", (req, res) => {
+    Goal.find({}, (err, results) => {
+        if (results.length === 0) {
+            Goal.insertMany(defaultGoals, (err) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log("success inserting")
+                }
+            })
+            console.log(results)
+            setTimeout(() => {
+                res.redirect("/");
+            }, 1000)
+        } else {
+            let day = date.getDate()
+            res.render("list", {
+                listTitle: day,
+                newListGoals: results
+            })
+        }
+    })
 })
-// })
 ///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
 app.post("/", (req, res) => {
     let newGoal = req.body.newGoal
