@@ -2,17 +2,19 @@ const express = require("express")
 const mongoose = require("mongoose")
 const app = express()
 const date = require(__dirname + "/date.js")
+const _ = require("lodash")
 // app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }))
 app.use(express.static("public"))
 
+
 app.set("view engine", "ejs")
 
 
 // PODŁĄCZAM MONGOOSE I TWORZE DATABASE TODOLISTDB
-mongoose.connect("mongodb://localhost:27017/todolistDB", {
+mongoose.connect("mongodb+srv://elicitmind:WLsmyF7WS7AvAjJm@cluster0.wjc84.mongodb.net/toAchieveDb?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
@@ -37,6 +39,7 @@ const goal3 = new Goal({
 })
 
 const defaultGoals = [goal1, goal2, goal3]
+const day = date.getDate()
 
 const listSchema = {
     name: String,
@@ -61,7 +64,6 @@ app.get("/", (req, res) => {
                 res.redirect("/");
             }, 1000)
         } else {
-            let day = date.getDate()
             res.render("list", {
                 listTitle: day,
                 newListGoals: results
@@ -72,46 +74,106 @@ app.get("/", (req, res) => {
 ///POST REQUEST Z FORMY NA STRONIE, BODY."NAME-INPUT" OZNACZA WARTOŚĆ
 app.post("/", (req, res) => {
     const newGoal = req.body.newGoal
-    console.log(req.body)
+    // console.log(req.body)
+    const listName = req.body.list
+
     const addGoal = new Goal({
         name: newGoal
     })
-    addGoal.save()
+    if (listName === day) {
+        addGoal.save()
+        res.redirect("/");
 
-    res.redirect("/")
-  
+    } else {
+
+        List.findOne({
+            name: listName
+        }, (err, results) => {
+            console.log(listName)
+            console.log(results.goals)
+            console.log(newGoal)
+            console.log(addGoal)
+
+
+
+
+            results.goals.push(addGoal)
+            results.save()
+
+            // await results.save()
+
+
+            // res.redirect("/" + listName)
+
+            // return res.redirect("/" + listName)
+            res.redirect("/" + listName)
+
+        })
+
+
+    }
+
+
+
+
     // ///PO POST REQUEST WYSYŁAMY DANE(.redirect()) Z POWROTEM DO APP.GET ("/") GDZIE JE ZAPISUJEMY
     // res.redirect("/")
+
+})
+app.get("/:customPage", (req, res) => {
+    const customPage = _.capitalize(req.params.customPage)
+
+    List.findOne({
+        name: customPage
+    }, async (err, results) => {
+        if (!results) {
+            const list = new List({
+                name: customPage,
+                goals: defaultGoals
+            })
+            await list.save()
+            res.redirect("/" + customPage)
+        } else {
+            res.render("list", {
+                listTitle: results.name,
+                newListGoals: results.goals
+            })
+        }
+    })
+
 })
 
 app.post("/delete", (req, res) => {
     const checkedGoalId = req.body.checkbox
-    Goal.findByIdAndRemove(checkedGoalId, (err) => {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log(checkedGoalId + " removed!")
-        }
-    })
-    res.redirect("/")
+    const listName = req.body.listName
+
+    if (listName === day) {
+        Goal.findByIdAndRemove(checkedGoalId, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(checkedGoalId + " removed!")
+            }
+        })
+        res.redirect("/")
+    } else {
+        List.findOneAndUpdate({
+                name: listName
+            }, {
+                $pull: {
+                    goals: {
+                        _id: checkedGoalId
+                    }
+                }
+            },
+            (err, results) => {
+                if (!err) {
+                    res.redirect("/" + listName)
+                }
+            })
+    }
 })
 
-app.get("/:customPage", (req, res) => {
-    const customPage = req.params.customPage
-    List.findOne({name: customPage}, (err, results) => {
-        if (!results) {
-            const list = new List({
-        name: customPage,
-        goals: defaultGoals
-    })
-    list.save()
-    res.redirect("/" + customPage)
-        } else {
-            res.render("list", {listTitle: results.name, newListGoals: results.goals})
-        }
-    })
-      
-})
 
 app.get("/about", (req, res) => {
     res.render("about")

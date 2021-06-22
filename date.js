@@ -3,9 +3,7 @@ const today = new Date()
 
 exports.getDate = () => {
 const options = {
-    day: "numeric",
     weekday: "long",
-    month: "long"
 }
 
 return today.toLocaleDateString("en-US", options)
