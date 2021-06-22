@@ -14,7 +14,7 @@ app.set("view engine", "ejs")
 
 
 // PODŁĄCZAM MONGOOSE I TWORZE DATABASE TODOLISTDB
-mongoose.connect("mongodb+srv://elicitmind:WLsmyF7WS7AvAjJm@cluster0.wjc84.mongodb.net/toAchieveDb?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://elicitmind:<password>@cluster0.wjc84.mongodb.net/toAchieveDb?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
