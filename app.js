@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const app = express()
 const date = require(__dirname + "/date.js")
 const _ = require("lodash")
+require('dotenv').config()
 // app.use(express.json());
 app.use(express.urlencoded({
     extended: true
@@ -14,7 +15,7 @@ app.set("view engine", "ejs")
 
 
 // PODŁĄCZAM MONGOOSE I TWORZE DATABASE TODOLISTDB
-mongoose.connect("mongodb+srv://elicitmind:WLsmyF7WS7AvAjJm@cluster0.wjc84.mongodb.net/toAchieveDb?retryWrites=true&w=majority", {
+mongoose.connect(process.env.MONGOOSE_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
